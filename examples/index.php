@@ -13,7 +13,6 @@
 
 	session_start();
 	
-	//hb2E8avZ9C
 	
 	//session_destroy();
 	//session_start();
@@ -51,7 +50,6 @@
 	#Login Example 2 -- login to PCO and use custom handlers to get/save access token. e.g. alternative to extending class for database caching
 	/**
 	* Custom Get Access Token Handler
-	* @param string $username
 	*/
 	/*
 	function handleGetAccessToken(){
@@ -68,7 +66,6 @@
 	
 	/**
 	* Custom Save Access Token Handler
-	* @param string $username
 	* @param object $token
 	*/
 	
@@ -184,7 +181,7 @@
 	echo "Created {$model->name}, ID:{$model->id}\n";
 	
 	
-	//still todo, implement remaining api resources, however this should be a enough to jump start your application
+	//still todo, implement remaining api resources, however this should be enough to jump start your application
 	
 	
 	
