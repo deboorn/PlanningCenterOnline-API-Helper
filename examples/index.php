@@ -6,7 +6,7 @@
 	 * @license apache license 2.0, code is distributed "as is", use at own risk, all rights reserved
 	 * @copyright 2012 Daniel Boorn
 	 * @author Daniel Boorn daniel.boorn@gmail.com - Available for hire. Email for more info.
-	 * @requires PHP PECL OAuth, http://php.net/oauth
+	 * @requires (now optional) PHP PECL OAuth, http://php.net/oauth, Packaged OAuth will load when pecl oauth not present
 	 */
 
 	ini_set('display_errors','1');
@@ -25,8 +25,8 @@
 	
 	//contact PCO via email to request consumer key/secret for API
 	$settings = array(
-		'key'=>'you key here',
-		'secret'=>'your secret here',
+		'key'=>'YOUR KEY HERE',
+		'secret'=>'YOUR SECRET HERE',
 		'debug'=>false,
 	);
 	
@@ -41,6 +41,8 @@
 	$callbackUrl = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}";//e.g. url to this page on return from auth
 	
 	#Login Example 1 -- login using session saving of access token
+	
+	//!!Please remember to set your consumer key/secret above!!
 	
 	//$r = $pco->login($callbackUrl);	
 	//$r = $pco->login($callbackUrl,PlanningCenterOnline::TOKEN_CACHE_SESSION);//produces same result
@@ -161,6 +163,7 @@
 	//create person
 	
 	//example 1 -- create person object with name, address supplied
+	/*
 	$model = (object) array(
 		'first_name'=>"John",
 		'last_name'=>"Doe",
@@ -179,7 +182,7 @@
 	$model = $pco->createPerson($model);
 	//var_dump($model);
 	echo "Created {$model->name}, ID:{$model->id}\n";
-	
+	*/
 	
 	//still todo, implement remaining api resources, however this should be enough to jump start your application
 	

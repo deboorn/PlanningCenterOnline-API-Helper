@@ -7,7 +7,7 @@
 	 * @license apache license 2.0, code is distributed "as is", use at own risk, all rights reserved
 	 * @copyright 2012 Daniel Boorn
 	 * @author Daniel Boorn daniel.boorn@gmail.com - Available for hire. Email for more info.
-	 * @requires PHP PECL OAuth (http://php.net/oauth)
+	 * @requires (now optional) PHP PECL OAuth, http://php.net/oauth, Packaged OAuth will load when pecl oauth not present
 	 *
 	 */
 	class PlanningCenterOnline{
@@ -45,6 +45,17 @@
 		 */
 		public function __construct($settings){
 			$this->settings = (object) $settings;
+			$this->checkOAuth();
+		}
+		
+		/**
+		 * load packaged oauth with pecl oauth not found
+		 */
+		protected function checkOAuth(){
+			if(!class_exists('OAuth')){
+				require('OAuthClient.php');
+				require('OAuth.php');
+			}
 		}
 		
 		/**
@@ -229,7 +240,7 @@
 				if(isset($r->base)){
 					throw new Exception(implode("\n",$r->base));
 				}
-				die("Error Code: {$e->getCode()} - {$e->getMessage}\n");
+				die("Error Code: {$e->getCode()} - {$e->getMessage()}\n");
 			}
 		}
 		
@@ -283,7 +294,8 @@
 				case self::TOKEN_CACHE_CUSTOM:
 					$token = call_user_func($custoHandlers['getAccessToken']);
 			}
-			if($token) return $token;
+			if($token && isset($token->oauth_token) && isset($token->oauth_token_secret)) return $token;
+			return null;
 		}
 		
 		/**
@@ -309,7 +321,6 @@
 		 * @param const $cacheType
 		 */
 		protected function saveAccessToken($token,$cacheType,$custoHandlers){
-			
 			switch($cacheType){
 				case self::TOKEN_CACHE_FILE:
 					$this->saveFileAccessToken($token);
@@ -390,11 +401,11 @@
 			
 			//fetch cached token (if any)
 			$token = $this->getAccessToken($cacheType,$custoHandlers);
+			
 			if($token){
 				$this->accessToken = $token;
 				return true;
 			}
-			
 			
 			//else handle callback (if any)
 			if(isset($_GET['oauth_token'])){
