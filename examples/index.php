@@ -95,38 +95,34 @@
 	 */
 	
 	#Example 1 - Organization
-	/*
 	$o = $pco->organization;
 	//var_dump($o);
-	echo "Organization: {$o['id']} - {$o['name']} - {$o['owner_name']}\n";
+	echo "Organization: {$o->id} - {$o->name} - {$o->owner_name}\n";
 	$serviceId = null;//used for example 2
-	foreach($o['service_types'] as $key=>$service){
-		echo "Service: {$service['id']} - {$service['name']}\n";
-		if(!$serviceId) $serviceId = $service['id'];//grab first service id for use in examples below
+	foreach($o->service_types as $key=>$service){
+		echo "Service: {$service->id} - {$service->name}\n";
+		if(!$serviceId) $serviceId = $service->id;//grab first service id for use in examples below
 	}
-	*/
 	
 	
 	#Example 2 - Plans
 	
 	//get all plans by service id
-	/*
 	$plans = $pco->getPlansByServiceId($serviceId);
 	//var_dump($plans);
 	$planId = null;//used for example
 	echo "Total Plans Found: " . sizeof($plans) . "\n";
 	foreach($plans as $plan){
-		echo "{$plan['id']}\n";
-		if(!$planId) $planId = $plan['id'];//used in example below
+		echo "{$plan->id}\n";
+		if(!$planId) $planId = $plan->id;//used in example below
 	}
-	*/
 	
 	
 	//get plan by id
-	//$plan = $pco->getPlanById($planId);
+	$plan = $pco->getPlanById($planId);
 	//var_dump($plan);
-	//echo "Plan ID: {$plan['id']}\n";
-	
+	echo "Plan ID: {$plan->id}\n";
+
 	
 	#Example 3 - People
 	
