@@ -49,7 +49,7 @@
 		}
 		
 		/**
-		 * load packaged oauth with pecl oauth not found
+		 * load packaged oauth (if needed)
 		 */
 		protected function checkOAuth(){
 			if(!class_exists('OAuth')){
