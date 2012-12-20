@@ -40,7 +40,7 @@
 		
 		
 		/**
-		 * contruct fellowship one class with settings array that contains
+		 * contruct PCO class with settings array that contains consumer key
 		 * @param unknown_type $settings
 		 */
 		public function __construct($settings){
