@@ -6,7 +6,7 @@
 	 * @license Non-Commercial Creative Commons, http://creativecommons.org/licenses/by-nc/2.0/, code is distributed "as is", use at own risk, all rights reserved
 	 * @copyright 2012 Daniel Boorn
 	 * @author Daniel Boorn daniel.boorn@gmail.com - Available for hire. Email for more info.
-	 * @requires (now optional) PHP PECL OAuth, http://php.net/oauth, Packaged OAuth will load when pecl oauth not present
+	 * @requiresPHP PECL OAuth, http://php.net/oauth
 	 */
 
 	ini_set('display_errors','1');
