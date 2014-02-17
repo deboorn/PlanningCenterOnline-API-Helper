@@ -27,7 +27,7 @@
 	$settings = array(
 		'key'=>'',
 		'secret'=>'',
-		'debug'=>true,
+		'debug'=>false,
 	);
 	
 	echo "<pre>";//view formatted debug output
