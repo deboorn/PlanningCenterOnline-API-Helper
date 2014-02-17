@@ -356,7 +356,7 @@
 				die("Error: {$e->getMessage()}\nCode: {$e->getCode()}\nResponse: {$e->lastResponse}\n");
 			}
 		}
-		
+                
 		/**
 		 * obtain user authoration access token from API
 		 * @throws Exception

@@ -25,9 +25,9 @@
 	
 	//contact PCO via email to request consumer key/secret for API
 	$settings = array(
-		'key'=>'YOUR KEY HERE',
-		'secret'=>'YOUR SECRET HERE',
-		'debug'=>false,
+		'key'=>'',
+		'secret'=>'',
+		'debug'=>true,
 	);
 	
 	echo "<pre>";//view formatted debug output
@@ -38,8 +38,7 @@
 	 * BEGIN: Login Examples
 	 */
 
-	$callbackUrl = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}";//e.g. url to this page on return from auth
-	
+	$callbackUrl = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}"; //e.g. url to this page on return from auth
 	#Login Example 1 -- login using session saving of access token
 	
 	//!!Please remember to set your consumer key/secret above!!
@@ -95,32 +94,129 @@
 	
 	#Example 1 - Organization
 	$o = $pco->organization;
-	//var_dump($o);
-	echo "Organization: {$o->id} - {$o->name} - {$o->owner_name}\n";
-	$serviceId = null;//used for example 2
-	foreach($o->service_types as $key=>$service){
-		echo "Service: {$service->id} - {$service->name}\n";
-		if(!$serviceId) $serviceId = $service->id;//grab first service id for use in examples below
-	}
+        
+//        //print out organization stuff as a string...
+//        $j = json_encode($pco->fetch('https://www.planningcenteronline.com/organization.json'));
+//        echo "{$j}\n";
+        
+//	echo "Organization: {$o->id} - {$o->name} - {$o->owner_name}\n";
+//	$serviceId = null;//used for example 2
+//	foreach($o->service_types as $key=>$service){
+//                echo "Service: {$service->id} - {$service->name} - {$service->type}\n";
+//		if(!$serviceId) $serviceId = $service->id;//grab first service id for use in examples below
+//	}
+//        foreach($o->service_type_folders as $key=>$service_folder_types){
+//            echo "Service Folder: {$service_folder_types->id} - {$service_folder_types->name} - \n";
+//            foreach($service_folder_types->service_types as $key=>$service){
+//                echo "     Service: {$service->id} - {$service->name} - {$service->type}\n";
+//            //    //if(!$serviceId) $serviceId = $service->id;//grab first service id for use in examples below
+//            }
+//	}
+
+        //Find the most recent Service for DC
+        $DC_FOLDER=0;
+        $dcservice = $o->service_type_folders[$DC_FOLDER]->service_types[0];
+        echo "DC Service: {$dcservice->id}\n";          
+
+//        $j = json_encode($dcservice);
+//        echo "    DC Service: {$j}\n";
+
+        
+////        //Find the most recent Service for KT
+//        $KT_FOLDER=1;
+//        $ktservice = $o->service_type_folders[$KT_FOLDER]->service_types[0];
+//        echo "KT Service: {$ktservice->id}\n";          
+        
+	#Example 2 - Plans for DC
 	
-	
-	#Example 2 - Plans
-	
-	//get all plans by service id
-	$plans = $pco->getPlansByServiceId($serviceId);
-	//var_dump($plans);
-	$planId = null;//used for example
-	echo "Total Plans Found: " . sizeof($plans) . "\n";
-	foreach($plans as $plan){
-		echo "{$plan->id}\n";
-		if(!$planId) $planId = $plan->id;//used in example below
-	}
-	
-	
-	//get plan by id
-	$plan = $pco->getPlanById($planId);
-	//var_dump($plan);
-	echo "Plan ID: {$plan->id}\n";
+//	//get all plans by service id
+	$plans = $pco->getPlansByServiceId($dcservice->id);
+//	//var_dump($plans);
+//	$planId = null;//used for example
+//	echo "Total Plans Found: " . sizeof($plans) . "\n";
+//	foreach($plans as $plan){
+//		echo "{$plan->id} - {$plan->dates}\n";
+//		if(!$planId) $planId = $plan->id;//used in example below
+//	}
+        
+//        //Get the DC Upcoming Plan...
+//        $j = json_encode($plans[0]);
+//        echo "    Service: {$j}\n";
+//        
+//        $j = json_encode($plans[0]->id);
+//        echo "     First Item: {$j}\n";
+        
+        //Item 0 is the most recent plan...
+        echo "Fetching DC Plan: {$plans[0]->id} - {$plans[0]->dates}\n";
+        $plan = $pco->getPlanById($plans[0]->id);
+
+        $j = json_encode($plan);
+        echo "{$j}\n";
+        
+        //Iterate through all the items...
+        $save_attachments = null;
+        $n = 0;
+        foreach($plan->items as $item){
+            echo "  Item: $item->title\n";
+            //start saving attachments after the 'Service' title.
+            if ($item->title == "PW Set") {
+                $save_attachments = TRUE;
+            }
+            
+            
+            if ($save_attachments == TRUE) {
+                //iterate through all attachments to find the media files...for now just images.
+                $len = count($item->attachments);
+                //echo "      Saving: at least $len attachments.\n";
+                foreach($item->attachments as $attachment){
+                    //may add other types someday...
+                    if (strpos($attachment->content_type,"image") !== FALSE) {
+                        $n = $n + 1;
+                        echo "      Saving: $attachment->filename ($attachment->content_type)\n";
+                        //write to file...
+                        //Other things I should check for: 
+                        //$attachment->downloadable = true, 
+                        $new_file_name = "/Users/ccc/tmp/test{$n}.jpg";
+                        $url = $attachment->url;
+                        echo "      Saving from URL: $url\n";
+                        var_dump($item->attachments);
+
+                        $r = $pco->fetch($url,NULL,OAUTH_HTTP_METHOD_GET,$attachment->content_type);
+                        
+//                        $temp_file_contents = collect_file($url);
+//                        write_to_file($temp_file_contents,$new_file_name);
+                    }      
+                }
+            }      
+        }
+
+    function collect_file($url){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+//        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true); 
+//        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); 
+//        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+//        curl_setopt($ch, CURLOPT_HEADER, 0);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return($result);
+    }
+
+    function write_to_file($text,$new_filename){
+        $fp = fopen($new_filename, 'w');
+        fwrite($fp, $text);
+        fclose($fp);
+    }
+//        
+
+      
+                
+//	//get plan by id
+//	$plan = $pco->getPlanById($planId);
+//	//var_dump($plan);
+//	echo "Plan ID: {$plan->id}\n";
 
 	
 	#Example 3 - People
@@ -134,9 +230,9 @@
 	*/
 	
 	//search people
-	/*
-	$people = $pco->getPeople(array(
-		'name'=>"Boorn",
+	
+	/*$people = $pco->getPeople(array(
+		'name'=>"David",
 		//'people_ids'=>'34,12,51',
 		//'since'=>'2008051208300',//yyyymmddhhmmss in UTC
 		//'show_disabled_accounts'=>'true',
@@ -185,10 +281,4 @@
 	*/
 	
 	//still todo, implement remaining api resources, however this should be enough to jump start your application
-	
-	
-	
-	
-	
-	
-	
+        
