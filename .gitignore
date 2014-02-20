@@ -1,2 +1,5 @@
 /MyFirstApp/nbproject/private/
 /nbproject/private/
+!tokens/.htaccess
+tokens/*
+.idea/*
