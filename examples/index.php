@@ -27,7 +27,7 @@
 	$settings = array(
 		'key'=>'',
 		'secret'=>'',
-		'debug'=>false,
+		'debug'=>true,
 	);
 	
 	echo "<pre>";//view formatted debug output
@@ -179,36 +179,21 @@
                         $new_file_name = "/Users/ccc/tmp/test{$n}.jpg";
                         $url = $attachment->url;
                         echo "      Saving from URL: $url\n";
-                        var_dump($item->attachments);
-
-                        $r = $pco->fetch($url,NULL,OAUTH_HTTP_METHOD_GET,$attachment->content_type);
+                        //var_dump($item->attachments[0]);
                         
-//                        $temp_file_contents = collect_file($url);
+                        $r = $pco->getAttachment($url,NULL,OAUTH_HTTP_METHOD_GET,$attachment->content_type);
+                        //$r = $pco->fetch($attachment->url);
+                        copy($r['redirect_url'],$new_file_name);                        //$temp_file_contents = collect_file($url);
+                        //echo var_dump($temp_file_contents);
+                        
+                        
 //                        write_to_file($temp_file_contents,$new_file_name);
                     }      
                 }
             }      
         }
 
-    function collect_file($url){
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-//        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-//        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true); 
-//        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); 
-//        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-//        curl_setopt($ch, CURLOPT_HEADER, 0);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        return($result);
-    }
-
-    function write_to_file($text,$new_filename){
-        $fp = fopen($new_filename, 'w');
-        fwrite($fp, $text);
-        fclose($fp);
-    }
+    
 //        
 
       
