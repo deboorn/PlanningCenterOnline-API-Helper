@@ -356,7 +356,7 @@
 				die("Error: {$e->getMessage()}\nCode: {$e->getCode()}\nResponse: {$e->lastResponse}\n");
 			}
 		}
-		
+                
 		/**
 		 * obtain user authoration access token from API
 		 * @throws Exception
@@ -379,7 +379,29 @@
 			}
 		}
 		
-		/**
+                public function getAttachment($url,$data = NULL,$method=OAUTH_HTTP_METHOD_GET,$contentType='application/json'){  
+			try{
+				$o = new OAuth($this->settings->key, $this->settings->secret, OAUTH_SIG_METHOD_HMACSHA1);
+				$o->setToken($this->accessToken->oauth_token, $this->accessToken->oauth_token_secret);
+                                $o->disableRedirects();
+                                $headers = array(
+					'Content-Type' => $contentType,		
+				);
+				$r = $o->fetch($url, $data, $method, $headers);
+                                var_dump($r);
+                                $rspinfo = $o->getLastResponseInfo();
+                                return $rspinfo;
+			}catch(OAuthException $e){
+				$r = json_decode($e->lastResponse);
+				if(isset($r->base)){
+					throw new Exception(implode("\n",$r->base));
+				}
+				die("Error Code: {$e->getCode()} - {$e->getMessage()}\n");
+			}
+                      
+                }
+
+                                /**
 		 * login oauth based authentication
 		 * @param string $callbackUrl
 		 * @param const $cacheType
