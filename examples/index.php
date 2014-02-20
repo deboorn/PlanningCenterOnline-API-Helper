@@ -24,8 +24,8 @@ require('../src/com.rapiddigitalllc/PlanningCenterOnline.php');
 
 //contact PCO via email to request consumer key/secret for API
 $settings = array(
-'key'=>'btOLMrXDUoM8Q6Fq0LjL',
-'secret'=>'nLCWcH8zYy2klWscDlOpA5uytZom2Rcui9ZbjlS9',
+'key'=>'',
+'secret'=>'',
 'debug'=>false,
 );
 
@@ -182,7 +182,7 @@ echo "Created {$model->name}, ID:{$model->id}\n";
 
 
 //Example 4 - get attachments from plan ID
-
+/*
         $download_dir = '/Users/Shared';
         //Iterate through all the items in plan and get image attachments...
         $n = 0;
@@ -208,6 +208,7 @@ echo "Created {$model->name}, ID:{$model->id}\n";
             }
         }
         echo "Saved: $n attachments!";
+*/
 //
 //still todo, implement remaining api resources, however this should be enough to jump start your application
 
