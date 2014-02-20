@@ -24,8 +24,8 @@ require('../src/com.rapiddigitalllc/PlanningCenterOnline.php');
 
 //contact PCO via email to request consumer key/secret for API
 $settings = array(
-'key'=>'YOUR KEY HERE',
-'secret'=>'YOUR SECRET HERE',
+'key'=>'btOLMrXDUoM8Q6Fq0LjL',
+'secret'=>'nLCWcH8zYy2klWscDlOpA5uytZom2Rcui9ZbjlS9',
 'debug'=>false,
 );
 
@@ -180,6 +180,35 @@ $model = $pco->createPerson($model);
 echo "Created {$model->name}, ID:{$model->id}\n";
 */
 
+
+//Example 4 - get attachments from plan ID
+
+        $download_dir = '/Users/Shared';
+        //Iterate through all the items in plan and get image attachments...
+        $n = 0;
+        foreach($plan->items as $item){
+            echo "  Item: $item->title\n";
+            //iterate through all attachments to find the media files...for now just images.
+            //$len = count($item->attachments);
+            //echo "      Saving: at least $len attachments.\n";
+            foreach($item->attachments as $attachment){
+                //can add other types or none...
+                if (strpos($attachment->content_type,"image") !== FALSE) {
+                    $n = $n + 1;
+                    echo "      Saving: $attachment->filename ($attachment->content_type)\n";
+                    //write to file...
+                    //Other things I should check for: 
+                    //$attachment->downloadable = true, 
+                    $new_file_name = "$download_dir/test{$n}.jpg";
+                    $url = $attachment->url;
+                    echo "      Saving from URL: $url\n";
+                    $r = $pco->getAttachment($url,NULL,OAUTH_HTTP_METHOD_GET,$attachment->content_type);
+                    copy($r['redirect_url'],$new_file_name);                        //$temp_file_contents = collect_file($url);
+                }
+            }
+        }
+        echo "Saved: $n attachments!";
+//
 //still todo, implement remaining api resources, however this should be enough to jump start your application
 
 

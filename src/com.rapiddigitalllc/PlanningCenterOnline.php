@@ -387,14 +387,10 @@
                                 $headers = array(
 					'Content-Type' => $contentType,		
 				);
-				if($o->fetch($url, $data, $method, $headers)){
-                                        $r = $o->getLastResponseInfo();
-					return $r['redirect_url'];
-				}
-                                else {
-                                    $r = $o->getLastResponseInfo();
-                                    return $r;
-                                }
+				$r = $o->fetch($url, $data, $method, $headers);
+                                var_dump($r);
+                                $rspinfo = $o->getLastResponseInfo();
+                                return $rspinfo;
 			}catch(OAuthException $e){
 				$r = json_decode($e->lastResponse);
 				if(isset($r->base)){
