@@ -1,4 +1,4 @@
-# PlanningCenterOnline API Helper
+## PlanningCenterOnline API Helper
 
 * See `/examples/index.php` for use.
 * PHP PECL OAuth is Required.
